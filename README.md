@@ -10,3 +10,28 @@ Scraping for discounts: skyscanner,travekpayout,airbnb, scraping news website (t
 Database:gives all options
 
 Claude: gives best option, identify landmarks and choose options
+
+
+Plan
+1. User input:
+   - Name
+   - Status
+       - Student
+       - Senior
+       - ...
+   - Location
+   - Destination
+   - Date of travel
+   - Prefered travel method
+   - Stay: Hotel / Airbnb
+   - Estimate Budget
+2. Data Processing:
+   -Scrapes through website on major travel website to find the best deals.
+   - Use data in our database and Claude API to determine the best option for the user
+4. Output:
+   - Most Recommended way
+   - Cheapest way
+   - Fastest way
+   - News related to traveling to that place
+5. Purchase
+   - Redirect them to the official website with discounts to purchase
