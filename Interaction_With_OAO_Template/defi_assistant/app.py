@@ -145,7 +145,7 @@ if eth_price is not None and eth_change is not None:
     change_col.metric("24h Change", f"{eth_change:.2f}%", f"{eth_change:.2f}%")
     
 # Display the main title of the app
-st.title("DeFi Assistant")
+st.title("zAgent")
 
 risk_profile = st.selectbox(
     "Select your risk profile:", 
