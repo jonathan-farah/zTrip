@@ -44,7 +44,6 @@ eth_price, eth_change = get_eth_price()
 print(f"Debug - ETH Price: ${eth_price}, Change: {eth_change}%")
 
 def get_defi_recommendation(user_input, risk_profile):
-    """Get DeFi recommendations using Claude API"""
     eth_price, eth_change = get_eth_price()
     eth_info = ""
     
@@ -60,8 +59,6 @@ def get_defi_recommendation(user_input, risk_profile):
     
     Provide a detailed recommendation for the best DeFi strategy based on the request and risk profile.
     Include specific protocols, expected yields, and risk factors.
-    
-    IMPORTANT: If the user is asking about ETH prices or ETH-related strategies, use the current ETH price information provided above.
     """
     
   
@@ -157,54 +154,37 @@ risk_profile = st.selectbox(
 
 user_input = st.text_area("What would you like help with today?",  "I want..." )
 
-# Create a button
+
 if st.button("Get Recommendations"): 
-    # Show a spinner while generating recommendations
     with st.spinner("Generating recommendations with Claude..."):
-        # Call the function to get recommendations from Claude
         claude_recommendation = get_defi_recommendation(user_input, risk_profile)
-        
-        # Display recommendation
         st.write("### Claude Recommendation")
         st.write(claude_recommendation)
-    
     # Create two columns for blockchain interaction buttons
     blockchain_col1, blockchain_col2 = st.columns(2)
     
+
+
+# Estimates a fee for processing the AI request
+# Creates a blockchain transaction to call calculateAIResult() on a smart contract
+# Requires paying a fee in ETH (which is staked or used to process the request)
+# Signs and sends the transaction to the Ethereum network
+
     with blockchain_col1:
-        if st.button("Submit to Blockchain Oracle"): 
-            # Format the prompt for the blockchain call
+        if st.button("Send to Blockchain ORA AI"): 
             blockchain_prompt = f"Analyze yield optimization for {user_input} with {risk_profile} risk profile"
             
-            # Show a spinner while submitting to blockchain
-            with st.spinner("Submitting to blockchain..."):
-                # Call function to send prompt to blockchain
-                tx_hash = send_to_blockchain(blockchain_prompt)
+            tx_hash = send_to_blockchain(blockchain_prompt)
                 
-                if tx_hash:  # If submission was successful
-                    # Store transaction hash in session state for later use
-                    st.session_state['tx_hash'] = tx_hash
-                    
-                    # Show success message with transaction hash
-                    st.success(f"Transaction submitted! Hash: {tx_hash}")
-                    
-                    # Show informational message about processing time
-                    st.info("The blockchain AI Oracle will process your request. This may take some time.")
+            if tx_hash:  
+                st.session_state['tx_hash'] = tx_hash                
+                st.write(f"Transaction submitted! Hash: {tx_hash}")
+
     
-    # Second column contains the "Check Blockchain Result" button
     with blockchain_col2:
-        # Only show and process this button if a transaction has been submitted
         if st.button("Check Blockchain Result") and 'tx_hash' in st.session_state:
-            # Show a spinner while checking the result
-            with st.spinner("Checking result..."):
-                # Use the same prompt for consistency
-                blockchain_prompt = f"Analyze yield optimization for {user_input} with {risk_profile} risk profile"
-                
-                # Call function to get result from blockchain
-                result = get_blockchain_result(11, blockchain_prompt)  # Using Llama3 model_id (11)
-                
-                # Display a subheading for blockchain result
-                st.write("### Blockchain Oracle Result")
-                
-                # Display the result text
-                st.write(result)
+            
+            blockchain_prompt = f"Analyze yield optimization for {user_input} with {risk_profile} risk profile"
+            result = get_blockchain_result(11, blockchain_prompt)  # Using Llama3 
+            st.write("### Blockchain Oracle Result")
+            st.write(result)
